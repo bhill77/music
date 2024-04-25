@@ -7,10 +7,10 @@ import (
 	"github.com/thedevsaddam/govalidator"
 )
 
-func Validate(rules govalidator.MapData, data *entity.Song) url.Values {
+func Validate(data entity.HasRules) url.Values {
 	opts := govalidator.Options{
 		Data:  data,
-		Rules: rules,
+		Rules: data.Rules(),
 	}
 	v := govalidator.New(opts)
 	e := v.ValidateStruct()

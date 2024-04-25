@@ -1,6 +1,10 @@
 package entity
 
-import "time"
+import (
+	"time"
+
+	"github.com/thedevsaddam/govalidator"
+)
 
 type Song struct {
 	ID         int       `json:"id"`
@@ -10,4 +14,11 @@ type Song struct {
 	File       string    `json:"file"`
 	PlayCounts int       `json:"play_counts"`
 	CreatedAt  time.Time `json:"created_at"`
+}
+
+func (s *Song) Rules() govalidator.MapData {
+	return govalidator.MapData{
+		"title":  []string{"required"},
+		"artist": []string{"required"},
+	}
 }

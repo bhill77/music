@@ -6,7 +6,7 @@ endpoint:
 - delete song: DELETE /song/:id
 - list song: GET /song
 
-- play music: POST /play/:id
+- play music: POST /play/:id_song
 
 
 

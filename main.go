@@ -18,7 +18,9 @@ func main() {
 
 	db.AutoMigrate(&entity.Song{})
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		BodyLimit: 50 * 1024 * 1024, // limit of 50MB
+	})
 
 	songHandler := handler.NewSongHandler(db)
 
@@ -27,7 +29,10 @@ func main() {
 	// song
 	app.Post("/song", songHandler.Add)
 	app.Get("/song", songHandler.List)
+	app.Put("/song/:id", songHandler.Update)
 	app.Delete("/song/:id", songHandler.Delete)
+
+	app.Post("/song/upload", songHandler.Upload)
 
 	app.Listen(":4000")
 }
