@@ -33,7 +33,7 @@ func main() {
 		BodyLimit: 50 * 1024 * 1024, // limit of 50MB
 	})
 
-	songHandler := handler.NewSongHandler(db)
+	songHandler := handler.NewSongHandler(db, conf)
 
 	app.Get("/", handler.HelloHandler)
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/bhill77/music/config"
 	"github.com/bhill77/music/entity"
 	"github.com/bhill77/music/helper"
 	"github.com/gofiber/fiber/v2"
@@ -11,12 +12,14 @@ import (
 )
 
 type SongHandler struct {
-	db *gorm.DB
+	db   *gorm.DB
+	conf config.Config
 }
 
-func NewSongHandler(db *gorm.DB) *SongHandler {
+func NewSongHandler(db *gorm.DB, conf config.Config) *SongHandler {
 	return &SongHandler{
-		db: db,
+		db:   db,
+		conf: conf,
 	}
 }
 
@@ -30,7 +33,7 @@ func (h SongHandler) Add(c *fiber.Ctx) error {
 		return c.Status(400).JSON(e)
 	}
 
-	if _, err := os.Stat("./storage/" + song.File); err != nil {
+	if _, err := os.Stat(h.conf.StoragePath + "/" + song.File); err != nil {
 		return c.Status(400).JSON(map[string]string{"message": "file not found"})
 	}
 
@@ -44,7 +47,8 @@ func (h SongHandler) Upload(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err)
 	}
 
-	err = c.SaveFile(file, fmt.Sprintf("./storage/%s", file.Filename))
+	fmt.Println(h.conf.StoragePath)
+	err = c.SaveFile(file, fmt.Sprintf("%s/%s", h.conf.StoragePath, file.Filename))
 	if err != nil {
 		return c.Status(400).JSON(err)
 	}
@@ -73,9 +77,15 @@ func (h SongHandler) Update(c *fiber.Ctx) error {
 		return c.Status(400).JSON(e)
 	}
 
+	if _, err := os.Stat(h.conf.StoragePath + "/" + song.File); err != nil {
+		return c.Status(400).JSON(map[string]string{"message": "file not found"})
+	}
+
 	song.Artist = payload.Artist
 	song.Title = payload.Title
 	song.Cover = payload.Cover
+	song.File = payload.File
+
 	h.db.Updates(&song)
 	return c.JSON(song)
 }

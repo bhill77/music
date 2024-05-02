@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	Port string
-	DB   DB
+	Port        string
+	StoragePath string
+	DB          DB
 }
 
 type DB struct {
@@ -29,7 +30,8 @@ func LoadConfig() Config {
 	}
 
 	return Config{
-		Port: viper.GetString("port"),
+		Port:        viper.GetString("port"),
+		StoragePath: viper.GetString("storage_path"),
 		DB: DB{
 			Host:     viper.GetString("db.host"),
 			Port:     viper.GetString("db.port"),
