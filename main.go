@@ -45,5 +45,7 @@ func main() {
 
 	app.Post("/song/upload", songHandler.Upload)
 
+	app.Get("/stream/:id", songHandler.Stream)
+
 	app.Listen(":4000")
 }
