@@ -44,6 +44,7 @@ func main() {
 	app.Delete("/song/:id", songHandler.Delete)
 
 	app.Post("/song/upload", songHandler.Upload)
+	app.Get("/stream/:id", songHandler.Play)
 
 	app.Listen(":4000")
 }
